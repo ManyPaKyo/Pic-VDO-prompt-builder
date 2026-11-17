@@ -1,0 +1,38 @@
+{
+  "id": "./",
+  "name": "สร้าง Prompt ภาพ/วิดีโอ AI | Prompt Builder",
+  "short_name": "Prompt Builder",
+  "description": "เครื่องมือสร้าง Prompt ภาษาไทยและภาษาอังกฤษสำหรับภาพนิ่งและวิดีโอ AI",
+  "lang": "th",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E4ECFF",
+  "theme_color": "#3A3FCB",
+  "categories": [
+    "utilities",
+    "productivity",
+    "design"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

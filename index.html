@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="เครื่องมือสร้าง Prompt ภาษาไทยและภาษาอังกฤษสำหรับภาพนิ่งและวิดีโอ AI ปรับแต่งสไตล์ กล้อง แสง สี และ Negative Prompt ได้ทันที">
+<meta name="theme-color" content="#3A3FCB">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Prompt Builder">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<title>สร้าง Prompt ภาพ/วิดีโอ AI | Prompt Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E4ECFF;--ink:#101734;--muted:#465073;--glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.72);--solid:#F3F6FF;--edge:rgba(255,255,255,.8);--line:rgba(16,23,52,.15);--chip:rgba(255,255,255,.55);--field:rgba(255,255,255,.62);--accent:#3A3FCB;--on:#fff;--glow:rgba(58,63,203,.35);--shadow:0 12px 36px rgba(40,50,130,.16);--b1:#7FA6FF;--b2:#FFB199;--b3:#9BE8CB;--bo:.75;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A0F1F;--ink:#E9EDFB;--muted:#C6CEE8;--glass:rgba(12,18,42,.68);--glass2:rgba(16,24,54,.82);--solid:#141B33;--edge:rgba(255,255,255,.17);--line:rgba(255,255,255,.17);--chip:rgba(255,255,255,.1);--field:rgba(4,7,18,.55);--accent:#9AA7FF;--on:#0A0F1F;--glow:rgba(154,167,255,.3);--shadow:0 12px 40px rgba(0,0,0,.45);--b1:#3446F0;--b2:#E0527A;--b3:#12B5A0;--bo:.36;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A0F1F;--ink:#E9EDFB;--muted:#C6CEE8;--glass:rgba(12,18,42,.68);--glass2:rgba(16,24,54,.82);--solid:#141B33;--edge:rgba(255,255,255,.17);--line:rgba(255,255,255,.17);--chip:rgba(255,255,255,.1);--field:rgba(4,7,18,.55);--accent:#9AA7FF;--on:#0A0F1F;--glow:rgba(154,167,255,.3);--shadow:0 12px 40px rgba(0,0,0,.45);--b1:#3446F0;--b2:#E0527A;--b3:#12B5A0;--bo:.36;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans Thai",system-ui,sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(70px);opacity:var(--bo)}
+.bg i:nth-child(1){width:60vmax;height:60vmax;left:-20vmax;top:-18vmax;background:var(--b1)}
+.bg i:nth-child(2){width:50vmax;height:50vmax;right:-18vmax;top:28vh;background:var(--b2)}
+.bg i:nth-child(3){width:46vmax;height:46vmax;left:8vw;bottom:-24vmax;background:var(--b3)}
+main{max-width:720px;margin:0 auto;padding:20px 14px 120px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+h1{font-size:1.75rem;line-height:1.25;font-weight:600;letter-spacing:-.01em;margin:0}
+.sub{margin:0 0 18px;color:var(--muted)}
+h2{font-size:1rem;font-weight:600;margin:0 0 8px}
+.hint{color:var(--muted);font-size:.875rem;margin:-4px 0 8px}
+.glass,.sheet,.card,.bar,.pill,.chips button,.seg button,input,textarea{-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+.sheet,.card,.bar{background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shadow),inset 0 1px 0 var(--edge)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sheet,.card,.bar{background:var(--solid)}}
+.sheet{border-radius:28px;padding:4px 18px 8px;margin-top:14px}
+.sheet>section{padding:16px 0;border-top:1px solid var(--line)}
+.sheet>section:first-child{border-top:0}
+#result{padding:22px 2px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.grp{flex-basis:100%;font-size:.875rem;color:var(--muted);margin-top:8px}
+.chips button,.seg button,.pill{font:inherit;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer;transition:background .15s,box-shadow .15s}
+.chips button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:500;box-shadow:0 4px 16px var(--glow)}
+.seg{display:flex;gap:8px}
+.ctl{display:flex;gap:8px;align-items:stretch}
+.ctl .seg{flex:1}
+.ctl .pill{border-radius:16px;font-weight:500;padding:6px 16px}
+.seg button{flex:1;border-radius:16px;font-weight:500}
+.pill{white-space:nowrap;font-size:.875rem}
+label{display:block;font-weight:500;margin:10px 0 4px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
+textarea{min-height:84px;resize:vertical}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+body[data-mode="image"] .v{display:none}
+body[data-mode="video"] .i{display:none}
+.card{background:var(--glass2);border-radius:18px;padding:12px 14px;margin:0 0 12px}
+.card header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.card h3{margin:0;font-size:.95rem;font-weight:600}
+.card pre{margin:0;white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.95rem}
+.copy{font:inherit;font-size:.875rem;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:12px;padding:4px 12px;min-height:36px;cursor:pointer}
+.negs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.nc{font:inherit;text-align:left;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:14px;padding:8px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.nc b{font-weight:600;font-size:.9rem}
+.nc span{font-size:.78rem;line-height:1.35;color:var(--muted)}
+.nc[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on);box-shadow:0 4px 16px var(--glow)}
+.nc[aria-pressed="true"] span{color:var(--on);opacity:.88}
+#up{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);background:var(--glass2);border:1px solid var(--edge);box-shadow:var(--shadow);cursor:pointer;-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+#up[hidden]{display:none}
+.bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:696px;margin:0 auto;display:flex;gap:8px;justify-content:center;padding:10px;border-radius:22px}
+.bar button{font:inherit;min-height:44px;border-radius:14px;padding:0 16px;cursor:pointer;border:1px solid var(--accent)}
+#copyMain{background:var(--accent);color:var(--on);font-weight:600;flex:1;max-width:340px;box-shadow:0 4px 16px var(--glow)}
+#copyAll{background:transparent;color:var(--accent)}
+
+.top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0}
+.install-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:600;box-shadow:0 4px 16px var(--glow)}
+.install-btn svg{width:17px;height:17px;flex:none}
+.install-btn:disabled{opacity:.72;cursor:default}
+.app-toast{position:fixed;z-index:20;left:16px;right:16px;bottom:calc(82px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:12px 16px;border:1px solid var(--edge);border-radius:16px;background:var(--glass2);color:var(--ink);box-shadow:var(--shadow);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);font-size:.9rem;text-align:center}
+.app-toast[hidden]{display:none}
+@media(max-width:520px){.top{align-items:center}.top h1{font-size:1.35rem}.top-actions{gap:6px}.install-btn{padding:6px 10px;font-size:.8rem}.top-actions .pill{padding:6px 10px;font-size:.8rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+</style>
+</head>
+<body data-mode="video">
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<main>
+<div class="top">
+<h1>สร้าง Prompt ภาพ/วิดีโอ AI</h1>
+<div class="top-actions">
+<button type="button" id="install" class="pill install-btn" aria-label="ติดตั้งแอป">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+<span>ติดตั้งแอป</span>
+</button>
+<button type="button" id="theme" class="pill"></button>
+</div>
+</div>
+<p class="sub">เลือกตัวเลือกและกรอกรายละเอียด ระบบจะประกอบ prompt ให้ทันที แล้วคัดลอกไปใช้กับเครื่องมือสร้างภาพหรือวิดีโอ</p>
+
+<div class="seg" role="group" aria-label="ประเภทงาน">
+<button type="button" data-m="image" aria-pressed="false">ภาพนิ่ง</button>
+<button type="button" data-m="video" aria-pressed="true">วิดีโอ</button>
+</div>
+<div class="sheet">
+<section><h2>เนื้อหา</h2>
+<label for="subj">วัตถุหรือตัวละครหลัก</label>
+<input id="subj" placeholder="เช่น หูฟังไร้สายสีขาว, เด็กชายกับช้าง">
+<label for="set">ฉากหรือสถานที่</label>
+<input id="set" placeholder="เช่น โต๊ะไม้ริมหน้าต่าง, ป่าฝนตอนเช้า">
+<label for="extra">รายละเอียดเพิ่มเติม</label>
+<textarea id="extra" placeholder="เช่น โทนสีพาสเทล, มีไอน้ำลอย, ไม่มีคนในเฟรม"></textarea>
+<p class="hint" style="margin-top:8px">กดเพื่อเติมลงในรายละเอียด</p><div class="chips" id="quick"></div>
+</section>
+
+<section><h2>สไตล์ (44 แบบ)</h2><div class="chips" data-g="style"></div></section>
+
+<section><h2>ขนาดภาพ</h2><p class="hint">วอลเปเปอร์: มือถือ 9:19.5, โน้ตบุ๊ก 16:10, จอไวด์ 21:9</p><div class="chips" data-g="ar"></div></section>
+<section><h2>ความคมชัด</h2><div class="chips" data-g="q"></div></section>
+<section class="v"><h2>ความยาววิดีโอ</h2><div class="chips" data-g="dur"></div></section>
+<section><h2>มุมกล้อง</h2><div class="chips" data-g="cam"></div></section>
+<section class="v"><h2>การเคลื่อนกล้อง</h2><div class="chips" data-g="mv"></div></section>
+<section><h2>แสง</h2><div class="chips" data-g="lt"></div></section>
+<section><h2>โทนสี</h2><div class="chips" data-g="pal"></div></section>
+<section><h2>สิ่งที่ไม่ต้องการ (Negative prompt)</h2><p class="hint">กดเลือกสิ่งที่อยากให้ AI เลี่ยง สิ่งที่เลือกจะถูกรวมไว้ท้าย prompt ทั้งไทยและอังกฤษ</p><div class="negs" id="negs"></div>
+<label for="negx">เพิ่มเอง</label><input id="negx" placeholder="เช่น text, extra people, night">
+<p style="margin:10px 0 0"><button type="button" id="negclr" class="pill">ล้างที่เลือกทั้งหมด</button></p></section>
+
+<section class="v"><h2>เสียงบรรยาย</h2><div class="chips" data-g="nar"></div>
+<label>น้ำเสียง</label><div class="chips" data-g="tone"></div></section>
+
+<section><h2>คำบรรยายบนจอ (Caption)</h2><div class="chips" data-g="cap"></div>
+<label>ตำแหน่ง</label><div class="chips" data-g="pos"></div>
+<label for="script">บทพูดหรือข้อความคำบรรยาย</label>
+<textarea id="script" placeholder="พิมพ์ข้อความที่ต้องการ (ถ้าเลือกสองภาษา ใส่ภาษาไทยก่อน)"></textarea>
+<p class="hint" style="margin-top:8px">เลือกแม่แบบ แล้วแก้ข้อความในวงเล็บเหลี่ยม [ ] ให้ตรงกับงาน</p><div class="chips" id="tpl"></div>
+<p style="margin:10px 0 0"><button type="button" id="aiScript" class="pill">คัดลอกคำสั่งให้ AI เขียนบทให้</button></p>
+</section>
+
+
+</div>
+<section id="result"><h2>ผลลัพธ์</h2><p class="hint">Prompt ภาษาอังกฤษมักให้ผลดีกับโมเดลส่วนใหญ่ ส่วนฉบับภาษาไทยไว้ตรวจความถูกต้อง</p><div id="out"></div></section>
+<p style="text-align:center;margin:10px 0 0"><button type="button" id="clr" class="pill">เคลียร์ข้อมูลทั้งหมด</button></p>
+</main>
+<button type="button" id="up" aria-label="กลับขึ้นด้านบน" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
+<div class="bar">
+<button id="copyMain" type="button">คัดลอก English</button>
+<button id="copyAll" type="button">คัดลอกไทย</button>
+</div>
+<script>
+const A='คอนเทนต์และการตลาด',B='ภาพถ่ายและภาพยนตร์',C='การ์ตูนและศิลปะ',E='แนวคิดและบรรยากาศ';
+const D={
+style:[['รีวิวสินค้า','product review video style, hands-on demo, product clearly in focus, authentic creator feel',A],['แกะกล่อง','unboxing style, hands opening the package, anticipation, clean tabletop',A],['โฆษณาพรีเมียม','premium commercial advertisement, polished, glossy highlights',A],['รีวิวจากผู้ใช้ (UGC)','authentic user-generated content style, selfie-style testimonial, natural imperfections',A],['อาหาร ASMR','close-up food ASMR style, steam, sizzling textures, appetizing colors',A],['วล็อก','casual vlog style, handheld feel, natural and personal',A],['ท่องเที่ยว','travel video style, scenic establishing shots, sense of adventure',A],['สอน/อธิบาย','clean explainer style, simple visuals, infographic elements',A],['สุขภาพ/การแพทย์','clean medical animation style, accurate anatomy, calm blue palette, clear labels',A],['ข่าว/รายงาน','news report style, neutral framing, broadcast quality',A],
+['สารคดี','documentary style, natural observational footage, realistic and informative',B],['ภาพยนตร์','cinematic film look, shallow depth of field, color graded',B],['ภาพบุคคล','editorial portrait photography, natural skin texture, 85mm lens look',B],['ถ่ายสินค้าสตูดิโอ','studio product photography, seamless backdrop, crisp reflections',B],['สตรีทโฟโต้','candid street photography, documentary feel, available light',B],['ธรรมชาติ/สัตว์ป่า','wildlife and nature photography, telephoto compression, rich detail',B],['ภูมิทัศน์','epic landscape photography, wide dynamic range, deep depth of field',B],['ฟิล์มย้อนยุค','vintage retro film style, film grain, faded colors',B],['ขาวดำ','high-contrast black and white, deep shadows, timeless mood',B],['ไทม์แลปส์','time-lapse style, accelerated motion of clouds, light and crowds',B],['สโลว์โมชัน','ultra slow-motion look, fine droplets and particles, smooth motion',B],
+['การ์ตูน 2D','2D cartoon style, bold outlines, flat vibrant colors, expressive characters',C],['อนิเมะ','anime style, detailed cel shading, painterly backgrounds',C],['แอนิเมชัน 3D','stylized 3D animation, soft rounded characters, polished render',C],['ดินน้ำมัน/สต็อปโมชัน','claymation stop-motion style, tactile clay textures, handmade imperfections',C],['สีน้ำ','watercolor illustration style, soft textures, paper grain',C],['สีน้ำมัน','oil painting style, visible brushstrokes, rich impasto',C],['หนังสือภาพเด็ก','children picture-book illustration, gentle colors, whimsical',C],['มังงะขาวดำ','black-and-white manga style, screentone shading, dynamic panels',C],['พิกเซลอาร์ต','retro pixel art style, limited palette, 16-bit look',C],['สเก็ตช์ลายเส้น','hand-drawn pencil sketch style, loose linework',C],['กระดาษตัด','layered paper-cut art style, soft depth shadows',C],['ป๊อปอาร์ต','pop art style, halftone dots, bold primary colors',C],['ไอโซเมตริก','isometric illustration style, clean geometry, tiny detailed scenes',C],
+['แฟนตาซี','fantasy style, magical atmosphere, epic scale',E],['ไซไฟ','sci-fi style, futuristic technology, clean glowing details',E],['ไซเบอร์พังก์','cyberpunk style, rainy neon streets, holographic signs',E],['สยองขวัญ/ลึกลับ','moody mystery horror style, fog, deep shadows, tension',E],['โปสเตอร์ไทยโบราณ','vintage Thai movie poster style, hand-painted look, bold colors',E],['มินิมอล','minimalist style, generous negative space, muted palette',E],['เซอร์เรียล','surreal dreamlike style, impossible scale, symbolic imagery',E],['เวเปอร์เวฟ','vaporwave style, pastel neon gradients, retro-futuristic',E],['สตีมพังก์','steampunk style, brass gears, Victorian machinery',E],['มิวสิกวิดีโอ','music video style, stylized lighting, rhythmic cuts, bold color grading',E]],
+ar:[['แนวตั้ง 9:16','vertical 9:16 frame for mobile and shorts','9:16'],['แนวนอน 16:9','horizontal 16:9 widescreen frame','16:9'],['จัตุรัส 1:1','square 1:1 frame','1:1'],['แนวตั้ง 4:5','portrait 4:5 frame','4:5'],['มือถือ 9:19.5','tall 9:19.5 smartphone wallpaper frame','9:19'],['แท็บเล็ตตั้ง 3:4','portrait 3:4 tablet wallpaper frame','3:4'],['แท็บเล็ตนอน 4:3','landscape 4:3 tablet wallpaper frame','4:3'],['โน้ตบุ๊ก 16:10','16:10 laptop wallpaper frame','16:10'],['แนวนอน 3:2','landscape 3:2 frame','3:2'],['โปสเตอร์ 2:3','portrait 2:3 poster frame','2:3'],['อัลตราไวด์ 21:9','ultrawide 21:9 desktop wallpaper frame','21:9'],['ซูเปอร์ไวด์ 32:9','super ultrawide 32:9 dual-monitor wallpaper frame','32:9']],
+q:[['Full HD 1080p','full HD 1080p, sharp'],['2K','2K resolution, crisp detail'],['4K','4K ultra-sharp, fine detail'],['8K ละเอียดสูงสุด','8K ultra-detailed, razor-sharp focus']],
+dur:[5,8,10,15,30,60].map(n=>[n+' วินาที','',n]),
+cam:[['ระดับสายตา','eye-level shot'],['มุมต่ำ (เงยขึ้น)','low-angle shot looking up'],['มุมสูง','high-angle shot'],['มุมบนตรง','top-down overhead shot'],['โคลสอัพ','close-up shot'],['มุมกว้าง','wide establishing shot'],['มองข้ามไหล่','over-the-shoulder shot'],['มุมเอียง','dutch angle'],['มุมมองบุคคลที่หนึ่ง (POV)','first-person POV shot'],['โดรนมุมสูง','aerial drone shot'],['มาโคร','macro shot']],
+mv:[['นิ่ง','static locked-off camera'],['แพนกล้อง','smooth pan'],['ก้ม-เงย','slow tilt'],['ดอลลี่เข้า','slow dolly-in'],['ดอลลี่ออก','slow dolly-out'],['โคจรรอบวัตถุ','camera orbiting the subject'],['ตามติด','tracking shot following the subject'],['ถือกล้อง','handheld camera with natural shake'],['ซูมเข้า','slow zoom-in']],
+pal:[['ไม่ระบุ',''],['พาสเทล','soft pastel color palette'],['ขาวสะอาด มินิมอล','clean white and light gray palette'],['โทนอบอุ่น','warm tones of amber, orange and terracotta'],['โทนเย็น','cool tones of blue, teal and slate'],['ขาว-ดำ','monochrome black and white'],['ดำ-ทองหรูหรา','luxurious black and gold palette'],['ม่วง-ชมพูนีออน','neon purple and magenta palette'],['ฟ้า-ส้ม ซีนีมา','teal and orange cinematic color grade'],['เขียวธรรมชาติ','fresh natural greens'],['เอิร์ธโทน','earthy browns, beige and olive'],['น้ำเงินเข้มมิดไนต์','deep midnight blue palette'],['แดงสด','bold red and crimson palette'],['พระอาทิตย์ตก ส้ม-ชมพู','sunset gradient of orange, pink and purple'],['ทะเล ฟ้า-มินต์','ocean blues and mint green'],['ขาวฟ้าสดใส','bright white and sky blue'],['วินเทจ เซเปีย','faded sepia vintage tones'],['ไล่สีโฮโลกราฟิก','iridescent holographic gradient'],['โทนมืดดาร์ก','dark moody palette with deep shadows'],['สีรุ้งสด','vibrant rainbow colors'],['ชมพู-ครีม','blush pink and cream palette'],['เขียวมรกต-ทอง','emerald green and gold'],['เงิน-เทาเมทัลลิก','silver and gunmetal metallic tones']],
+lt:[['แสงธรรมชาติ','soft natural light'],['โกลเดนอาวร์','warm golden-hour light'],['สตูดิโอซอฟต์บ็อกซ์','clean studio softbox lighting'],['นีออนกลางคืน','neon-lit night scene'],['ดราม่าโลว์คีย์','low-key dramatic lighting'],['สว่างใส','bright airy high-key lighting']],
+tone:[['เป็นกันเอง','friendly, conversational'],['มืออาชีพ','professional, confident'],['สนุกสนาน','energetic, playful'],['สงบผ่อนคลาย','calm, soothing'],['ตื่นเต้น','excited, upbeat']],
+nar:[['ไม่มี',''],['ไทย','Thai'],['อังกฤษ','English'],['ไทย + อังกฤษ','Thai and English']],
+cap:[['ไม่มี',''],['ไทย','Thai'],['อังกฤษ','English'],['ไทย + อังกฤษ','Thai and English']],
+pos:[['ล่าง','bottom'],['กลาง','center'],['บน','top']]
+};
+const S={mode:'video',pal:0,style:0,ar:0,q:2,dur:2,cam:0,mv:0,lt:0,nar:1,tone:0,cap:1,pos:0};
+const $=id=>document.getElementById(id);
+let cards=[];
+
+function mark(k){document.querySelectorAll('[data-g="'+k+'"] button').forEach((b,i)=>b.setAttribute('aria-pressed',S[k]===i))}
+document.querySelectorAll('[data-g]').forEach(el=>{
+  const k=el.dataset.g;
+  let lg='';D[k].forEach((it,i)=>{if(k==='style'&&it[2]!==lg){lg=it[2];const t=document.createElement('div');t.className='grp';t.textContent=lg;el.appendChild(t)}const b=document.createElement('button');b.type='button';b.textContent=it[0];b.onclick=()=>{S[k]=i;mark(k);out()};el.appendChild(b)});
+  mark(k);
+});
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
+  S.mode=b.dataset.m;document.body.dataset.mode=S.mode;
+  document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));out();
+});
+['subj','set','extra','script'].forEach(id=>$(id).oninput=out);
+
+function build(){
+  const v=S.mode==='video',g=k=>D[k][S[k]],val=id=>$(id).value.trim();
+  const dur=g('dur')[2],ar=g('ar'),extra=val('extra'),subj=val('subj'),set=val('set'),script=val('script');
+  const en=[(v?'A '+dur+'-second video of ':'An image of ')+(subj||'[subject]')+(set?', set in '+set:''),
+    g('style')[1],g('cam')[1]+(v?', '+g('mv')[1]:''),g('lt')[1],g('pal')[1],g('q')[1],ar[1]].filter(Boolean);
+  if(extra)en.push(extra);
+  let enText=en.join(', ')+'.';
+  const th=(v?'วิดีโอ '+dur+' วินาที':'ภาพนิ่ง')+': '+(subj||'[ระบุวัตถุ]')+(set?' ฉาก'+set:'')+'\nสไตล์: '+g('style')[0]+'\nมุมกล้อง: '+g('cam')[0]+(v?' / เคลื่อนกล้อง: '+g('mv')[0]:'')+'\nแสง: '+g('lt')[0]+(S.pal?'\nโทนสี: '+g('pal')[0]:'')+'\nคุณภาพ: '+g('q')[0]+' / ขนาด: '+ar[0]+(extra?'\nเพิ่มเติม: '+extra:'');
+  const sel=N.filter((n,i)=>NS[i]&&(v||!n[3])),nx=$('negx').value.trim();
+  const eN=sel.map(n=>n[1]),tN=sel.map(n=>n[0]);if(nx){eN.push(nx);tN.push(nx)}
+  const wantN=v&&S.nar>0,wantC=S.cap>0,both=S.nar===3||S.cap===3;
+  const eL=[],tL=[];
+  if(wantN){eL.push('Narration: '+g('nar')[1]+', '+g('tone')[1]+' tone, about '+Math.round(dur*2.5)+' English words for '+dur+' seconds.');tL.push('เสียงบรรยาย: '+g('nar')[0]+' น้ำเสียง'+g('tone')[0]+' (ความยาวพอดี '+dur+' วินาที ประมาณ '+Math.round(dur*3)+' คำไทย หรือ '+Math.round(dur*2.5)+' คำอังกฤษ)')}
+  if(wantC){eL.push('Captions: '+g('cap')[1]+', '+g('pos')[1]+' of the frame, max 2 lines, high contrast, clean sans-serif.');tL.push('Caption: '+g('cap')[0]+' ตำแหน่ง'+g('pos')[0]+' ไม่เกิน 2 บรรทัด ตัวอักษรอ่านง่ายคมชัด')}
+  if(wantN||wantC){eL.push('Script: '+(script||'[add script]')+(both?'\nEnglish: [add English translation]':''));tL.push('ข้อความ: '+(script||'[ใส่บทพูดภาษาไทย]')+(both?'\nEN: [ใส่คำแปลภาษาอังกฤษ]':''));if(wantC)tL.push('หมายเหตุ: เติม caption ตอนตัดต่อ เพราะโมเดลวิดีโอมักสะกดข้อความไทยผิด')}
+  if(eL.length)enText+='\n'+eL.join('\n');
+  if(eN.length)enText+='\nAvoid: '+eN.join(', ')+'.';
+  let thT=th+(tN.length?'\nหลีกเลี่ยง: '+tN.join(', '):'');
+  if(tL.length)thT+='\n'+tL.join('\n');
+  cards=[['Prompt (English)',enText],['Prompt (ภาษาไทย)',thT]];
+}
+function legacyCopy(t){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}
+async function copy(t,btn,label){
+  let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}catch(e){ok=legacyCopy(t)}
+  const old=label||btn.textContent;btn.textContent=ok?'คัดลอกแล้ว':'คัดลอกไม่ได้ ลองกดค้างที่ข้อความ';
+  setTimeout(()=>btn.textContent=old,1600);
+}
+function out(){
+  build();const box=$('out');box.innerHTML='';
+  cards.forEach(([t,x])=>{
+    const c=document.createElement('div');c.className='card';
+    const h=document.createElement('header'),h3=document.createElement('h3'),b=document.createElement('button');
+    h3.textContent=t;b.className='copy';b.type='button';b.textContent='คัดลอก';b.onclick=()=>copy(x,b,'คัดลอก');
+    h.append(h3,b);const p=document.createElement('pre');p.textContent=x;c.append(h,p);box.appendChild(c);
+  });
+}
+$('copyMain').onclick=e=>copy(cards[0][1],e.target,'คัดลอก English');
+$('copyAll').onclick=e=>copy(cards[1][1],e.target,'คัดลอกไทย');
+const btn=(t,f,al)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;if(al)b.setAttribute('aria-label',al);return b};
+const Q=[['โทนสีพาสเทล','pastel color palette'],['ควันบางๆ','light atmospheric haze'],['ฟิล์มเกรน','subtle film grain'],['ขอบภาพมืด','soft vignette'],['ไม่มีคนในเฟรม','no people in frame'],['สีสดตัดกัน','vivid contrasting colors'],['เบลอฉากหลัง','shallow depth of field, blurred background'],['เว้นที่ว่างวางไอคอน','calm negative space for app icons and clock'],['ไม่มีตัวอักษรและโลโก้','no text, logos or watermarks']];
+Q.forEach(([t,e])=>$('quick').appendChild(btn(t,()=>{const x=$('extra'),v=x.value.trim();x.value=(v?v+', ':'')+t+' ('+e+')';out()})));
+const N=[
+['ภาพเบลอ','blurry','ภาพไม่คมชัด',0,1],
+['ความละเอียดต่ำ','low resolution','ภาพแตก ดูไม่ละเอียด',0,1],
+['มือ/นิ้วผิดรูป','distorted hands, extra fingers','นิ้วเกินหรือมือผิดสัดส่วน',0,1],
+['ร่างกายเพี้ยน','distorted anatomy','ใบหน้าหรือร่างกายบิดเบี้ยว',0,1],
+['ลายน้ำ/โลโก้','watermark, logo','ไม่ให้มีลายน้ำหรือโลโก้แปลกปลอม',0,1],
+['ตัวอักษรเพี้ยน','garbled text','ข้อความอ่านไม่ออก โมเดลมักสะกดผิด',0,1],
+['สีจัดเกินจริง','oversaturated','สีฉูดฉาดเกินไป',0,1],
+['แสงเสีย','underexposed, overexposed','ภาพมืดเกินหรือสว่างจ้าเกิน',0,0],
+['มีกรอบ/ขอบ','border, frame','ไม่ต้องการกรอบรอบภาพ',0,0],
+['ภาพซ้ำ/คอลลาจ','duplicate, collage','ไม่ให้ภาพซ้ำหรือต่อกันหลายช่อง',0,0],
+['มีคนในเฟรม','people','ใช้เมื่ออยากได้ภาพไม่มีคน',0,0],
+['ดูเป็นการ์ตูน','cartoon, illustration','ใช้เมื่ออยากได้ภาพสมจริง',0,0],
+['ดูสมจริงเกิน','photorealistic','ใช้เมื่ออยากได้แนววาด/การ์ตูน',0,0],
+['เม็ดสัญญาณรบกวน','noise, grain, jpeg artifacts','ภาพเป็นเม็ดหรือมีรอยบีบอัด',0,0],
+['ภาพกะพริบ','flickering','เฟรมสว่างมืดกะพริบ',1,1],
+['วัตถุเปลี่ยนรูป','morphing objects','ของบิดเปลี่ยนรูประหว่างคลิป',1,1],
+['ตัวละครไม่คงที่','inconsistent character','หน้าหรือชุดเปลี่ยนไปมา',1,1],
+['กล้องสั่นมาก','excessive camera shake','ภาพสั่นจนดูยาก',1,0],
+['เคลื่อนไหวกระตุก','jerky motion','การเคลื่อนไหวไม่ลื่นไหล',1,0]];
+const NS=N.map(n=>!!n[4]);
+const nb=$('negs');
+N.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.className='nc'+(n[3]?' v':'');b.setAttribute('aria-pressed',NS[i]);const t=document.createElement('b');t.textContent=n[0];const d=document.createElement('span');d.textContent=n[2];b.append(t,d);b.onclick=()=>{NS[i]=!NS[i];b.setAttribute('aria-pressed',NS[i]);out()};nb.appendChild(b)});
+$('negx').oninput=out;
+$('negclr').onclick=()=>{NS.fill(false);nb.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',false));out()};
+const TP=[
+['รีวิวสินค้า','สวัสดีครับ วันนี้มารีวิว [ชื่อสินค้า] ข้อดีคือ [จุดเด่น 1] และ [จุดเด่น 2] ใช้งานจริงแล้วรู้สึก [ความรู้สึก] ราคา [ราคา] ใครกำลังมองหา [กลุ่มลูกค้า] ลองดูได้เลยครับ'],
+['โฆษณา','[ชื่อสินค้า] ตัวช่วยที่ทำให้ [ปัญหาที่แก้ได้] เป็นเรื่องง่าย ด้วย [จุดเด่นหลัก] สัมผัสได้แล้ววันนี้ [คำชวน เช่น สั่งซื้อได้เลย]'],
+['สอน/อธิบาย','วันนี้จะอธิบาย [หัวข้อ] ให้เข้าใจง่ายๆ ข้อแรก [ข้อ 1] ข้อที่สอง [ข้อ 2] และข้อสุดท้าย [ข้อ 3] จำไว้ว่า [ข้อสรุปสั้นๆ]'],
+['ความรู้สุขภาพ','รู้ไหมครับว่า [หัวข้อสุขภาพ] เกิดจาก [สาเหตุ] อาการที่พบบ่อยคือ [อาการ] วิธีดูแลเบื้องต้นคือ [วิธีดูแล] แต่ถ้า [สัญญาณอันตราย] ควรไปพบแพทย์ (ข้อมูลทั่วไป ไม่ใช่การวินิจฉัย)'],
+['ท่องเที่ยว','ที่นี่คือ [สถานที่] ช่วง [เวลาหรือฤดู] บรรยากาศ [บรรยากาศ] ห้ามพลาด [กิจกรรมหรือจุดเด่น] ใครอยากมาลองต้องเตรียม [สิ่งที่ควรเตรียม]'],
+['สารคดี','[สถานที่หรือหัวข้อ] ที่ซึ่ง [ฉากเปิด] ทุกวัน [เหตุการณ์ที่เกิดขึ้น] และนี่คือเรื่องราวของ [ตัวเอกหรือสิ่งที่เล่า]'],
+['นิทาน','กาลครั้งหนึ่ง มี [ตัวละคร] อาศัยอยู่ที่ [สถานที่] วันหนึ่ง [เหตุการณ์] จนในที่สุด [ตอนจบ] และได้เรียนรู้ว่า [ข้อคิด]'],
+['แคปชันโซเชียล','[ประโยคเปิดสั้นๆ] [รายละเอียดหนึ่งบรรทัด] [คำชวน และแฮชแท็ก]']];
+TP.forEach(([n,t])=>$('tpl').appendChild(btn(n,()=>{$('script').value=t;out()})));
+$('aiScript').onclick=e=>{
+  const v=S.mode==='video',g=k=>D[k][S[k]],dur=g('dur')[2],L=v?S.nar:S.cap,en=L===2;
+  const lt=['ภาษาไทย','ภาษาไทย','ภาษาอังกฤษ','ภาษาไทย พร้อมคำแปลภาษาอังกฤษ'][L];
+  const subj=$('subj').value.trim()||'[ระบุเรื่อง]',set=$('set').value.trim();
+  const t=v?'ช่วยเขียนบทพูด'+lt+'สำหรับวิดีโอความยาว '+dur+' วินาที สไตล์'+g('style')[0]+' เรื่อง: '+subj+(set?' ฉาก: '+set:'')+' น้ำเสียง'+g('tone')[0]+' ประมาณ '+Math.round(dur*(en?2.5:3))+(en?' คำอังกฤษ':' คำไทย')+' ตอบเฉพาะบทพูด ไม่ต้องอธิบายเพิ่ม'
+    :'ช่วยเขียนแคปชัน'+lt+'สั้นๆ สำหรับภาพสไตล์'+g('style')[0]+' เรื่อง: '+subj+(set?' ฉาก: '+set:'')+' ไม่เกิน 2 บรรทัด ตอบเฉพาะแคปชัน';
+  copy(t,e.target,'คัดลอกคำสั่งให้ AI เขียนบทให้');
+};
+const up=$('up');
+addEventListener('scroll',()=>{up.hidden=scrollY<400},{passive:true});
+up.onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+const S0={...S};
+let ct;
+$('clr').onclick=()=>{
+  const b=$('clr');
+  if(!b.dataset.arm){b.dataset.arm='1';b.textContent='ยืนยันล้าง?';ct=setTimeout(()=>{delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด'},3000);return}
+  clearTimeout(ct);delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด';
+  Object.assign(S,S0);document.body.dataset.mode=S.mode;
+  document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.m===S.mode));
+  ['subj','set','extra','script','negx'].forEach(id=>$(id).value='');
+  Object.keys(D).forEach(mark);
+  N.forEach((n,i)=>NS[i]=!!n[4]);
+  nb.querySelectorAll('button').forEach((x,i)=>x.setAttribute('aria-pressed',NS[i]));
+  out();window.scrollTo({top:0,behavior:'smooth'});
+};
+const TH=document.documentElement,tb=$('theme'),mq=matchMedia('(prefers-color-scheme: dark)');
+const cur=()=>TH.dataset.theme||(mq.matches?'dark':'light');
+const lab=()=>{tb.textContent=cur()==='dark'?'โหมดสว่าง':'โหมดมืด';tb.setAttribute('aria-label','สลับเป็น'+tb.textContent)};
+try{const t=localStorage.getItem('pb_theme');if(t)TH.dataset.theme=t}catch(e){}
+tb.onclick=()=>{const n=cur()==='dark'?'light':'dark';TH.dataset.theme=n;try{localStorage.setItem('pb_theme',n)}catch(e){}lab()};
+if(mq.addEventListener)mq.addEventListener('change',lab);
+lab();
+out();
+</script>
+<div id="appToast" class="app-toast" role="status" aria-live="polite" hidden></div>
+<script>
+// PWA: installation support for Chromium, iOS Safari and other browsers.
+(() => {
+  const installButton = document.getElementById('install');
+  const toast = document.getElementById('appToast');
+  let deferredInstallPrompt = null;
+  let toastTimer = null;
+
+  const showToast = (message) => {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 4800);
+  };
+
+  const isStandalone = () =>
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+
+  const setInstalledState = () => {
+    if (!installButton) return;
+    if (isStandalone()) {
+      installButton.querySelector('span').textContent = 'ติดตั้งแล้ว';
+      installButton.disabled = true;
+      installButton.setAttribute('aria-label', 'ติดตั้งแอปแล้ว');
+    }
+  };
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    // Keep the native prompt until the user presses the install button.
+    event.preventDefault();
+    deferredInstallPrompt = event;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    setInstalledState();
+    showToast('ติดตั้ง Prompt Builder เรียบร้อยแล้ว');
+  });
+
+  installButton?.addEventListener('click', async () => {
+    if (isStandalone()) {
+      showToast('คุณกำลังใช้งาน Prompt Builder ในรูปแบบแอปอยู่แล้ว');
+      setInstalledState();
+      return;
+    }
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (choice?.outcome === 'accepted') {
+        showToast('รับคำสั่งติดตั้งแล้ว ทำตามขั้นตอนบนหน้าจอได้เลย');
+      } else {
+        showToast('ยกเลิกการติดตั้งแล้ว สามารถติดตั้งภายหลังได้');
+      }
+      return;
+    }
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      showToast('บน iPhone/iPad: แตะปุ่มแชร์ใน Safari แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”');
+    } else {
+      showToast('เปิดเมนูของเบราว์เซอร์ แล้วเลือก “ติดตั้งแอป” หรือ “สร้างทางลัด”');
+    }
+  });
+
+  setInstalledState();
+
+  // Service workers require HTTPS, except on localhost during development.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' })
+        .then((registration) => registration.update().catch(() => {}))
+        .catch((error) => console.warn('PWA service worker registration failed:', error));
+    });
+  }
+
+  window.addEventListener('offline', () => showToast('ขณะนี้ออฟไลน์: ใช้งานแอปที่เคยเปิดแล้วได้ตามปกติ'));
+  window.addEventListener('online', () => showToast('กลับมาเชื่อมต่ออินเทอร์เน็ตแล้ว'));
+})();
+</script>
+</body>
+</html>
