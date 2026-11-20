@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "สร้าง Prompt ภาพ/วิดีโอ AI | Prompt Builder",
+  "name": "สตูดิโอสร้าง Prompt AI | Prompt Builder",
   "short_name": "Prompt Builder",
-  "description": "เครื่องมือสร้าง Prompt ภาษาไทยและภาษาอังกฤษสำหรับภาพนิ่งและวิดีโอ AI",
+  "description": "เครื่องมือสร้าง Prompt ภาษาไทยและภาษาอังกฤษ สำหรับภาพนิ่ง วิดีโอ Storyboard และแต่งเพลง",
   "lang": "th",
   "start_url": "./",
   "scope": "./",

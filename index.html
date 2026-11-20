@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="เครื่องมือสร้าง Prompt ภาษาไทยและภาษาอังกฤษสำหรับภาพนิ่งและวิดีโอ AI ปรับแต่งสไตล์ กล้อง แสง สี และ Negative Prompt ได้ทันที">
+<meta name="description" content="สตูดิโอสร้าง Prompt AI ภาษาไทยและภาษาอังกฤษ สำหรับภาพนิ่ง วิดีโอ Storyboard และแต่งเพลง พร้อม Negative Prompt และใช้งานออฟไลน์">
 <meta name="theme-color" content="#3A3FCB">
 <meta name="color-scheme" content="light dark">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +13,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
-<title>สร้าง Prompt ภาพ/วิดีโอ AI | Prompt Builder</title>
+<title>สตูดิโอสร้าง Prompt AI | Prompt Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@ h2{font-size:1rem;font-weight:600;margin:0 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .grp{flex-basis:100%;font-size:.875rem;color:var(--muted);margin-top:8px}
 .chips button,.seg button,.pill{font:inherit;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer;transition:background .15s,box-shadow .15s}
-.chips button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:500;box-shadow:0 4px 16px var(--glow)}
+.chips button[aria-pressed="true"],.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:500;box-shadow:0 4px 16px var(--glow)}
 .seg{display:flex;gap:8px}
 .ctl{display:flex;gap:8px;align-items:stretch}
 .ctl .seg{flex:1}
@@ -72,19 +72,23 @@ body[data-mode="video"] .i{display:none}
 .nc[aria-pressed="true"] span{color:var(--on);opacity:.88}
 #up{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink);background:var(--glass2);border:1px solid var(--edge);box-shadow:var(--shadow);cursor:pointer;-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
 #up[hidden]{display:none}
+[hidden]{display:none!important}
+.tabs{margin-bottom:14px;overflow-x:auto}
+.tabs button{flex:1 0 auto;padding:6px 10px;font-size:.9rem;white-space:nowrap}
+#p1 .sheet{margin-top:0}
 .bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:696px;margin:0 auto;display:flex;gap:8px;justify-content:center;padding:10px;border-radius:22px}
 .bar button{font:inherit;min-height:44px;border-radius:14px;padding:0 16px;cursor:pointer;border:1px solid var(--accent)}
 #copyMain{background:var(--accent);color:var(--on);font-weight:600;flex:1;max-width:340px;box-shadow:0 4px 16px var(--glow)}
 #copyAll{background:transparent;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0}
 .install-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:600;box-shadow:0 4px 16px var(--glow)}
 .install-btn svg{width:17px;height:17px;flex:none}
 .install-btn:disabled{opacity:.72;cursor:default}
-.app-toast{position:fixed;z-index:20;left:16px;right:16px;bottom:calc(82px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:12px 16px;border:1px solid var(--edge);border-radius:16px;background:var(--glass2);color:var(--ink);box-shadow:var(--shadow);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);font-size:.9rem;text-align:center}
+.app-toast{position:fixed;z-index:30;left:16px;right:16px;bottom:calc(82px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:12px 16px;border:1px solid var(--edge);border-radius:16px;background:var(--glass2);color:var(--ink);box-shadow:var(--shadow);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);font-size:.9rem;text-align:center}
 .app-toast[hidden]{display:none}
-@media(max-width:520px){.top{align-items:center}.top h1{font-size:1.35rem}.top-actions{gap:6px}.install-btn{padding:6px 10px;font-size:.8rem}.top-actions .pill{padding:6px 10px;font-size:.8rem}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:520px){.top{align-items:center}.top h1{font-size:1.25rem}.top-actions{gap:6px}.install-btn{padding:6px 9px;font-size:.78rem}.top-actions .pill{padding:6px 9px;font-size:.78rem}}
 
 </style>
 </head>
@@ -92,21 +96,17 @@ body[data-mode="video"] .i{display:none}
 <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
 <main>
 <div class="top">
-<h1>สร้าง Prompt ภาพ/วิดีโอ AI</h1>
+<h1>สตูดิโอสร้าง Prompt AI</h1>
 <div class="top-actions">
 <button type="button" id="install" class="pill install-btn" aria-label="ติดตั้งแอป">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
-<span>ติดตั้งแอป</span>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span>ติดตั้งแอป</span>
 </button>
 <button type="button" id="theme" class="pill"></button>
-</div>
-</div>
-<p class="sub">เลือกตัวเลือกและกรอกรายละเอียด ระบบจะประกอบ prompt ให้ทันที แล้วคัดลอกไปใช้กับเครื่องมือสร้างภาพหรือวิดีโอ</p>
+</div></div>
+<p class="sub">เลือกตัวเลือกและกรอกรายละเอียด ระบบจะประกอบ prompt ให้ทันที สำหรับภาพ วิดีโอ storyboard และเพลง แล้วคัดลอกไปใช้ต่อ</p>
+<div class="seg tabs" role="tablist" aria-label="เลือกเครื่องมือ"><button type="button" role="tab" id="t1" aria-selected="true">ภาพนิ่ง</button><button type="button" role="tab" id="t2" aria-selected="false">วิดีโอ</button><button type="button" role="tab" id="t3" aria-selected="false">Storyboard</button><button type="button" role="tab" id="t4" aria-selected="false">แต่งเพลง</button></div>
 
-<div class="seg" role="group" aria-label="ประเภทงาน">
-<button type="button" data-m="image" aria-pressed="false">ภาพนิ่ง</button>
-<button type="button" data-m="video" aria-pressed="true">วิดีโอ</button>
-</div>
+<div id="p1">
 <div class="sheet">
 <section><h2>เนื้อหา</h2>
 <label for="subj">วัตถุหรือตัวละครหลัก</label>
@@ -146,6 +146,79 @@ body[data-mode="video"] .i{display:none}
 </div>
 <section id="result"><h2>ผลลัพธ์</h2><p class="hint">Prompt ภาษาอังกฤษมักให้ผลดีกับโมเดลส่วนใหญ่ ส่วนฉบับภาษาไทยไว้ตรวจความถูกต้อง</p><div id="out"></div></section>
 <p style="text-align:center;margin:10px 0 0"><button type="button" id="clr" class="pill">เคลียร์ข้อมูลทั้งหมด</button></p>
+</div>
+<div id="p2" hidden>
+<div class="sheet">
+<section><h2>พื้นฐานงาน</h2>
+<label for="sbTopic">เรื่องหรือหัวข้อ</label><input id="sbTopic" placeholder="เช่น รีวิวเครื่องฟอกอากาศรุ่นใหม่">
+<label for="sbAud">กลุ่มเป้าหมาย</label><input id="sbAud" placeholder="เช่น คนทำงานออฟฟิศ อายุ 25-40 ปี">
+<label>วัตถุประสงค์</label><div class="chips" data-b="goal"></div>
+<label>ช่องทางเผยแพร่</label><div class="chips" data-b="plat"></div>
+<label>ความยาวรวม</label><div class="chips" data-b="dur"></div>
+<label>ขนาดภาพ</label><div class="chips" data-b="ar"></div>
+<label>จำนวนช็อต</label><div class="chips" data-b="shots"></div></section>
+<section><h2>โครงเรื่อง</h2>
+<label>รูปแบบการเล่า</label><div class="chips" data-b="struct"></div>
+<label>ฮุคเปิดเรื่อง</label><div class="chips" data-b="hook"></div>
+<label for="sbMsg">ข้อความหลักที่อยากสื่อ</label><textarea id="sbMsg" placeholder="เช่น อากาศสะอาดทำให้นอนหลับดีขึ้นได้ใน 7 วัน"></textarea>
+<label for="sbMust">ต้องมี (จุดเด่น ชื่อแบรนด์ ราคา โปรโมชัน)</label><textarea id="sbMust" placeholder="เช่น ชื่อรุ่น X1, กรองฝุ่น PM2.5, ลด 20% ถึงสิ้นเดือน"></textarea>
+<label for="sbAvoid">ห้ามมีหรือห้ามพูดถึง</label><input id="sbAvoid" placeholder="เช่น ห้ามเปรียบเทียบกับคู่แข่ง, ห้ามอ้างผลทางการแพทย์">
+<label for="sbCta">คำชวน (CTA)</label><input id="sbCta" placeholder="เช่น กดสั่งซื้อที่ลิงก์ในโปรไฟล์"></section>
+<section><h2>ลุคและตัวละคร</h2>
+<label>สไตล์ภาพ</label><div class="chips" data-b="style"></div>
+<label>โทนสี</label><div class="chips" data-b="pal"></div>
+<label>แสง</label><div class="chips" data-b="lt"></div>
+<label for="sbChar">ตัวละครหรือพรีเซนเตอร์ (ใช้บรรยายซ้ำทุกช็อต)</label><textarea id="sbChar" placeholder="เช่น ผู้หญิงวัย 30 ผมสั้นประบ่า เสื้อเชิ้ตขาว กางเกงยีนส์ ยิ้มง่าย"></textarea>
+<label for="sbLoc">สถานที่หลักและของประกอบฉาก</label><input id="sbLoc" placeholder="เช่น ห้องนั่งเล่นโทนไม้ โซฟาสีเทา ต้นไม้ในกระถาง"></section>
+<section><h2>เสียงพากย์และเสียงประกอบ</h2>
+<label>ภาษาบทพากย์</label><div class="chips" data-b="vlang"></div>
+<label>ลักษณะเสียง</label><div class="chips" data-b="vg"></div>
+<label>น้ำเสียง</label><div class="chips" data-b="tone"></div>
+<label>ความเร็วในการพูด</label><div class="chips" data-b="pace"></div>
+<label>รูปแบบเสียง</label><div class="chips" data-b="vform"></div>
+<label>ดนตรีประกอบ</label><div class="chips" data-b="bgm"></div></section>
+<section><h2>รูปแบบผลลัพธ์ที่ให้ AI ตอบ</h2>
+<div class="chips" data-b="fmt"></div>
+<label>ช่องข้อมูลที่ต้องการในแต่ละช็อต</label><div class="chips" id="bt"></div></section>
+</div>
+<section id="sbresult" style="padding:22px 2px 0"><h2>ผลลัพธ์</h2><p class="hint">วาง prompt ใน AI แชต (Claude, Gemini, ChatGPT) เพื่อให้เขียน storyboard และบทพากย์ จากนั้นนำ prompt ภาพรายช็อตที่ได้ไปสร้างภาพหรือวิดีโอต่อ</p><div id="sbout"></div></section>
+<p style="text-align:center;margin:10px 0 0"><button type="button" id="sbclr" class="pill">เคลียร์ข้อมูลทั้งหมด</button></p>
+</div>
+<div id="p3" hidden>
+<div class="sheet">
+<section><h2>เรื่องราวของเพลง</h2>
+<label for="muTopic">ธีมหรือเรื่องที่อยากเล่า</label><textarea id="muTopic" placeholder="เช่น คิดถึงบ้านเกิดตอนฝนแรกของปี"></textarea>
+<label for="muTitle">ชื่อเพลง (ถ้ามี)</label><input id="muTitle" placeholder="ปล่อยว่างให้ AI เสนอชื่อได้">
+<label>วัตถุประสงค์</label><div class="chips" data-c="purpose"></div>
+<label>อารมณ์ (เลือกได้หลายอย่าง)</label><div class="chips" data-c="mood"></div>
+<label>ภาษาเนื้อเพลง</label><div class="chips" data-c="lang"></div>
+<label>มุมมองผู้ร้อง</label><div class="chips" data-c="pov"></div>
+<label>ลีลาภาษา</label><div class="chips" data-c="reg"></div>
+<label for="muMust">คำหรือประโยคที่ต้องมีในเนื้อเพลง</label><input id="muMust" placeholder="เช่น ชื่อแบรนด์, ชื่อคน, คำขวัญ">
+<label for="muAvoid">สิ่งที่ห้ามมี</label><input id="muAvoid" placeholder="เช่น คำหยาบ, ชื่อศิลปินจริง, ศาสนา"></section>
+<section><h2>แนวเพลงและจังหวะ</h2>
+<p class="hint">เลือกแนวเพลงได้หลายแนวเพื่อผสมกัน</p><div class="chips" data-c="genre"></div>
+<label>ความเร็ว</label><div class="chips" data-c="tempo"></div>
+<label>คีย์</label><div class="chips" data-c="key"></div>
+<label>จังหวะ</label><div class="chips" data-c="ts"></div>
+<label>ความยาว</label><div class="chips" data-c="dur"></div>
+<label>โครงสร้างเพลง</label><div class="chips" data-c="struct"></div>
+<label>การไล่อารมณ์</label><div class="chips" data-c="dyn"></div>
+<label>ท่อนฮุค</label><div class="chips" data-c="hook"></div></section>
+<section><h2>นักร้องและการร้อง</h2>
+<label>รูปแบบ</label><div class="chips" data-c="vtype"></div>
+<label>ผู้ร้องนำ</label><div class="chips" data-c="vgen"></div>
+<label>ช่วงเสียง</label><div class="chips" data-c="vrange"></div>
+<label>เทคนิคการร้อง (เลือกได้หลายอย่าง)</label><div class="chips" data-c="vtech"></div></section>
+<section><h2>เครื่องดนตรีและโปรดักชัน</h2>
+<label>เครื่องดนตรีหลัก (เลือกได้หลายอย่าง)</label><div class="chips" data-c="instr"></div>
+<label>เครื่องดนตรีที่มีท่อนโซโล่</label><div class="chips" data-c="solo"></div>
+<label>ลักษณะเสียงและโปรดักชัน</label><div class="chips" data-c="prod"></div>
+<label for="muExtra">รายละเอียดเสียงเพิ่มเติม</label><textarea id="muExtra" placeholder="เช่น เริ่มด้วยเสียงฝนและกีตาร์โปร่ง ท่อนสุดท้ายคอรัสขึ้นสูง"></textarea></section>
+</div>
+<section id="muresult" style="padding:22px 2px 0"><h2>ผลลัพธ์</h2><p class="hint">วาง prompt ใน AI แชตเพื่อให้เขียนเนื้อเพลงและแนวทางเรียบเรียง ส่วน Style tags ใช้วางในช่อง Style ของเครื่องมือสร้างเพลงเช่น Suno หรือ Udio ได้เลย</p><div id="muout"></div></section>
+<p style="text-align:center;margin:10px 0 0"><button type="button" id="muclr" class="pill">เคลียร์ข้อมูลทั้งหมด</button></p>
+</div>
 </main>
 <button type="button" id="up" aria-label="กลับขึ้นด้านบน" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
 <div class="bar">
@@ -224,8 +297,8 @@ function out(){
     h.append(h3,b);const p=document.createElement('pre');p.textContent=x;c.append(h,p);box.appendChild(c);
   });
 }
-$('copyMain').onclick=e=>copy(cards[0][1],e.target,'คัดลอก English');
-$('copyAll').onclick=e=>copy(cards[1][1],e.target,'คัดลอกไทย');
+$('copyMain').onclick=e=>copy(act()[0][1],e.target,'คัดลอก English');
+$('copyAll').onclick=e=>copy(act()[1][1],e.target,'คัดลอกไทย');
 const btn=(t,f,al)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=f;if(al)b.setAttribute('aria-label',al);return b};
 const Q=[['โทนสีพาสเทล','pastel color palette'],['ควันบางๆ','light atmospheric haze'],['ฟิล์มเกรน','subtle film grain'],['ขอบภาพมืด','soft vignette'],['ไม่มีคนในเฟรม','no people in frame'],['สีสดตัดกัน','vivid contrasting colors'],['เบลอฉากหลัง','shallow depth of field, blurred background'],['เว้นที่ว่างวางไอคอน','calm negative space for app icons and clock'],['ไม่มีตัวอักษรและโลโก้','no text, logos or watermarks']];
 Q.forEach(([t,e])=>$('quick').appendChild(btn(t,()=>{const x=$('extra'),v=x.value.trim();x.value=(v?v+', ':'')+t+' ('+e+')';out()})));
@@ -281,7 +354,7 @@ $('clr').onclick=()=>{
   const b=$('clr');
   if(!b.dataset.arm){b.dataset.arm='1';b.textContent='ยืนยันล้าง?';ct=setTimeout(()=>{delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด'},3000);return}
   clearTimeout(ct);delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด';
-  Object.assign(S,S0);document.body.dataset.mode=S.mode;
+  const md=S.mode;Object.assign(S,S0);S.mode=md;document.body.dataset.mode=md;
   document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.m===S.mode));
   ['subj','set','extra','script','negx'].forEach(id=>$(id).value='');
   Object.keys(D).forEach(mark);
@@ -289,6 +362,170 @@ $('clr').onclick=()=>{
   nb.querySelectorAll('button').forEach((x,i)=>x.setAttribute('aria-pressed',NS[i]));
   out();window.scrollTo({top:0,behavior:'smooth'});
 };
+const SE={
+goal:[['ขายสินค้า/บริการ','sell a product or service'],['ให้ความรู้','educate the audience'],['สร้างแบรนด์','build brand awareness'],['เล่าเรื่อง/บันเทิง','entertain with a story'],['ประชาสัมพันธ์/ข่าว','announce news or promote an event'],['สร้างแรงบันดาลใจ','inspire the audience']],
+plat:[['TikTok / Reels / Shorts','short-form vertical platforms (TikTok, Reels, Shorts)'],['YouTube','YouTube'],['ฟีด Facebook / Instagram','social media feed (Facebook, Instagram)'],['พรีเซนต์/จอใหญ่','presentation on a large screen'],['โฆษณาออนไลน์/ทีวี','online or TV commercial']],
+dur:[15,30,45,60,90,180].map(n=>[n<180?n+' วินาที':'3 นาที','',n]),
+shots:[['อัตโนมัติ','',0],['4','',4],['6','',6],['8','',8],['10','',10],['12','',12],['15','',15]],
+struct:[['Hook-ปัญหา-ทางออก-CTA','Hook, Problem, Solution, Call to action'],['3 องก์ (เปิด-ปม-ปิด)','three-act structure: setup, conflict, resolution'],['ก่อน-หลัง','before-and-after transformation'],['ลิสต์ข้อ (Top N)','listicle with numbered points'],['สอนทีละขั้น','step-by-step how-to'],['เล่าเรื่องตัวละคร','character-driven story with an emotional arc'],['รีวิว/พิสูจน์','review structure: claim, demo, evidence, verdict'],['สารคดี','documentary structure: opening, exploration, insight, closing']],
+hook:[['ไม่ระบุ',''],['คำถามกระตุก','open with a provocative question'],['ตัวเลขหรือข้อเท็จจริงช็อก','open with a surprising number or fact'],['เปิดผลลัพธ์ก่อน','open with the final result, then rewind'],['ภาพแปลกตา','open with a striking unusual visual'],['ปัญหาที่ทุกคนเจอ','open with a relatable problem']],
+vlang:[['ไทย','Thai'],['อังกฤษ','English'],['ไทย + ซับอังกฤษ','Thai with English subtitles'],['ไม่มีเสียงพูด','none']],
+vg:[['ไม่ระบุ',''],['เสียงหญิง','female voice'],['เสียงชาย','male voice'],['เสียงเด็ก','child voice'],['เสียงผู้สูงอายุ','elderly voice']],
+pace:[['ช้า','slow',[2.2,1.8]],['ปกติ','normal',[3,2.5]],['เร็ว','fast',[3.8,3.2]]],
+vform:[['บรรยายนอกเฟรม','off-screen narration'],['พูดต่อกล้อง','on-camera presenter speaking to the camera'],['บทสนทนาตัวละคร','dialogue between characters'],['ผสมบรรยายกับบทสนทนา','a mix of narration and short dialogue']],
+bgm:[['ไม่ระบุ',''],['สนุกสดใส','upbeat cheerful music'],['อบอุ่นซึ้ง','warm emotional piano'],['ตื่นเต้นเร้าใจ','energetic driving beat'],['ผ่อนคลาย','calm ambient music'],['ยิ่งใหญ่แบบภาพยนตร์','epic cinematic score'],['มินิมอลอิเล็กทรอนิกส์','minimal electronic music']],
+fmt:[['ตาราง','Markdown table'],['รายการทีละช็อต','shot-by-shot list'],['JSON','JSON array']]
+};
+SE.ar=D.ar.slice(0,4);
+const LS=k=>SE[k]||D[k];
+const SB0={goal:0,plat:0,dur:1,shots:0,ar:0,struct:0,hook:0,style:0,pal:0,lt:0,vlang:0,vg:0,tone:0,pace:1,vform:0,bgm:0,fmt:0};
+const SB={...SB0};
+const SBT=[['ไทม์โค้ดแต่ละช็อต',1],['prompt สร้างภาพทีละช็อต',1],['ข้อความบนจอ',1],['เสียงประกอบ/SFX',0],['ทรานซิชันระหว่างช็อต',0],['ฮุคทางเลือก 3 แบบ',0],['ตรวจว่าบทพากย์พอดีเวลา',1],['เสนอ B-roll เพิ่มเติม',0]];
+const SBS=SBT.map(x=>!!x[1]);
+const SBX=['sbTopic','sbAud','sbMsg','sbMust','sbAvoid','sbCta','sbChar','sbLoc'];
+let TAB=1,sbCards=[];
+const markB=k=>document.querySelectorAll('[data-b="'+k+'"] button').forEach((b,i)=>b.setAttribute('aria-pressed',SB[k]===i));
+document.querySelectorAll('[data-b]').forEach(el=>{const k=el.dataset.b;let lg='';LS(k).forEach((it,i)=>{if(k==='style'&&it[2]!==lg){lg=it[2];const t=document.createElement('div');t.className='grp';t.textContent=lg;el.appendChild(t)}el.appendChild(btn(it[0],()=>{SB[k]=i;markB(k);sbOut()}))});markB(k)});
+const bt=$('bt');
+SBT.forEach((x,i)=>{const b=btn(x[0],()=>{SBS[i]=!SBS[i];b.setAttribute('aria-pressed',SBS[i]);sbOut()});b.setAttribute('aria-pressed',SBS[i]);bt.appendChild(b)});
+SBX.forEach(id=>$(id).oninput=sbOut);
+function sbBuild(){
+  const g=k=>LS(k)[SB[k]],v=id=>$(id).value.trim(),T=i=>SBS[i];
+  const dur=SE.dur[SB.dur][2],n=SE.shots[SB.shots][2]||Math.min(15,Math.max(3,Math.round(dur/4)));
+  const sec=Math.round(dur/n*10)/10,vo=SB.vlang!==3,th=SB.vlang!==1,W=Math.round(dur*SE.pace[SB.pace][2][th?0:1]);
+  const L=(a,b)=>b&&b!=='ไม่ระบุ'?'- '+a+': '+b:false,J=x=>x.filter(y=>y!==false&&y!=null).join('\n');
+  const ex=[T(5)&&'three alternative hooks',T(6)&&vo&&'a final check that the voice-over fits '+dur+' seconds',T(7)&&'suggested B-roll shots'].filter(Boolean);
+  const exT=[T(5)&&'ฮุคทางเลือก 3 แบบ',T(6)&&vo&&'ตรวจว่าบทพากย์พอดีกับความยาว '+dur+' วินาที',T(7)&&'ช็อต B-roll ที่แนะนำเพิ่ม'].filter(Boolean);
+  const cE=['shot number',T(0)&&'time range','shot type and camera movement','visual description',vo&&'voice-over line',T(2)&&'on-screen text',T(3)&&'sound effects and music cue',T(4)&&'transition',T(1)&&'image-generation prompt'].filter(Boolean);
+  const cT=['ลำดับช็อต',T(0)&&'ช่วงเวลา','ประเภทช็อตและการเคลื่อนกล้อง','คำอธิบายภาพ',vo&&'บทพากย์',T(2)&&'ข้อความบนจอ',T(3)&&'เสียงประกอบและดนตรี',T(4)&&'ทรานซิชัน',T(1)&&'prompt สร้างภาพ (ภาษาอังกฤษ)'].filter(Boolean);
+  const topic=v('sbTopic');
+  const en=J(['You are an experienced video director and scriptwriter. Using the brief below, create a storyboard with a voice-over script.','',
+  'BRIEF',L('Topic',topic||'[topic]'),L('Goal',g('goal')[1]),L('Audience',v('sbAud')),L('Platform and format',g('plat')[1]+'; '+g('ar')[1]+'; total length '+dur+' seconds'),L('Story structure',g('struct')[1]),L('Opening hook',g('hook')[1]),L('Key message',v('sbMsg')),L('Must include',v('sbMust')),L('Must avoid',v('sbAvoid')),L('Call to action',v('sbCta')),'',
+  'LOOK AND FEEL',L('Visual style',g('style')[1]),L('Color palette',g('pal')[1]),L('Lighting',g('lt')[1]),L('Characters (describe them identically in every shot)',v('sbChar')),L('Main location and props',v('sbLoc')),'',
+  'VOICE AND SOUND',vo?L('Voice-over language',g('vlang')[1]):'- No spoken voice-over: tell the story through visuals and on-screen text.',
+  vo&&L('Voice',[g('vg')[1],g('tone')[1]+' tone',g('vform')[1]].filter(Boolean).join(', ')),vo&&L('Speaking pace',g('pace')[1]),
+  vo&&'- Voice-over budget: about '+W+(th?' Thai words':' English words')+' in total, split across the shots to match the duration of each shot',L('Background music',g('bgm')[1]),'',
+  'OUTPUT','- '+n+' shots, about '+sec+' seconds each on average (adjust to fit the story)','- Format: '+g('fmt')[1]+', with these fields for every shot: '+cE.join(', '),
+  T(1)&&'- Write each image-generation prompt in English and repeat the full character description, setting, style, lighting, camera angle and aspect ratio so the look stays consistent across shots.',
+  ex.length>0&&'- Also provide: '+ex.join('; '),SB.fmt===2&&'- Return only valid JSON with no extra commentary.']);
+  const tx=J(['คุณคือผู้กำกับและนักเขียนบทวิดีโอมืออาชีพ ช่วยทำ storyboard พร้อมบทพากย์จากบรีฟด้านล่าง','',
+  'บรีฟ',L('หัวข้อ',topic||'[ระบุหัวข้อ]'),L('วัตถุประสงค์',g('goal')[0]),L('กลุ่มเป้าหมาย',v('sbAud')),L('ช่องทางและรูปแบบ',g('plat')[0]+' / '+g('ar')[0]+' / ความยาวรวม '+dur+' วินาที'),L('โครงเรื่อง',g('struct')[0]),L('ฮุคเปิดเรื่อง',g('hook')[0]),L('ข้อความหลัก',v('sbMsg')),L('ต้องมี',v('sbMust')),L('ห้ามมี',v('sbAvoid')),L('คำชวน (CTA)',v('sbCta')),'',
+  'ลุคและบรรยากาศ',L('สไตล์ภาพ',g('style')[0]),L('โทนสี',g('pal')[0]),L('แสง',g('lt')[0]),L('ตัวละคร (ต้องหน้าตาและชุดเหมือนเดิมทุกช็อต)',v('sbChar')),L('สถานที่หลักและของประกอบฉาก',v('sbLoc')),'',
+  'เสียงและดนตรี',vo?L('ภาษาบทพากย์',g('vlang')[0]):'- ไม่มีเสียงพูด เล่าเรื่องด้วยภาพและข้อความบนจอ',
+  vo&&L('เสียง',[g('vg')[0],'น้ำเสียง'+g('tone')[0],g('vform')[0]].filter(x=>x!=='ไม่ระบุ').join(', ')),vo&&L('ความเร็วในการพูด',g('pace')[0]),
+  vo&&'- งบจำนวนคำบทพากย์: รวมประมาณ '+W+(th?' คำไทย':' คำอังกฤษ')+' แบ่งให้พอดีกับเวลาของแต่ละช็อต',L('ดนตรีประกอบ',g('bgm')[0]),'',
+  'ผลลัพธ์ที่ต้องการ','- '+n+' ช็อต เฉลี่ยช็อตละประมาณ '+sec+' วินาที (ปรับตามเรื่องได้)','- รูปแบบ: '+g('fmt')[0]+' มีช่องข้อมูลต่อช็อตดังนี้ '+cT.join(', '),
+  T(1)&&'- เขียน prompt สร้างภาพเป็นภาษาอังกฤษ และใส่คำอธิบายตัวละคร ฉาก สไตล์ แสง มุมกล้อง และอัตราส่วนภาพให้ครบทุกช็อต เพื่อให้หน้าตาต่อเนื่องกัน',
+  exT.length>0&&'- ให้เพิ่ม: '+exT.join(' / '),SB.fmt===2&&'- ตอบเป็น JSON ที่ถูกต้องเท่านั้น ไม่ต้องมีคำอธิบายอื่น']);
+  return [['Prompt (English)',en],['Prompt (ภาษาไทย)',tx]];
+}
+function sbOut(){
+  sbCards=sbBuild();const box=$('sbout');box.innerHTML='';
+  sbCards.forEach(([t,x])=>{const c=document.createElement('div');c.className='card';const h=document.createElement('header'),h3=document.createElement('h3'),b=document.createElement('button');h3.textContent=t;b.className='copy';b.type='button';b.textContent='คัดลอก';b.onclick=()=>copy(x,b,'คัดลอก');h.append(h3,b);const p=document.createElement('pre');p.textContent=x;c.append(h,p);box.appendChild(c)});
+}
+function setTab(n){
+  TAB=n;
+  if(n<3){S.mode=n===1?'image':'video';document.body.dataset.mode=S.mode;out()}
+  $('p1').hidden=n>2;$('p2').hidden=n!==3;$('p3').hidden=n!==4;
+  [1,2,3,4].forEach(i=>$('t'+i).setAttribute('aria-selected',i===n));scrollTo(0,0);
+}
+[1,2,3,4].forEach(i=>$('t'+i).onclick=()=>setTab(i));
+let sct;
+$('sbclr').onclick=()=>{
+  const b=$('sbclr');
+  if(!b.dataset.arm){b.dataset.arm='1';b.textContent='ยืนยันล้าง?';sct=setTimeout(()=>{delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด'},3000);return}
+  clearTimeout(sct);delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด';
+  Object.assign(SB,SB0);SBT.forEach((x,i)=>SBS[i]=!!x[1]);SBX.forEach(id=>$(id).value='');
+  Object.keys(SB0).forEach(markB);bt.querySelectorAll('button').forEach((x,i)=>x.setAttribute('aria-pressed',SBS[i]));
+  sbOut();scrollTo(0,0);
+};
+sbOut();
+const GT='ไทย',GP='ป็อปและร็อก',GW='แนวสากลอื่นๆ',GE='อิเล็กทรอนิกส์',GA='เอเชียตะวันออก',GO='ออร์เคสตราและภาพยนตร์';
+const MX={
+purpose:[['เพลงทั่วไป','a standalone song'],['เพลงโฆษณา/แบรนด์','a jingle or brand song'],['เพลงประกอบวิดีโอ','background music for a video'],['เพลงเด็ก/เพลงสอน','a children or educational song with simple, easy-to-sing lyrics'],['เพลงให้กำลังใจ/ปลุกใจ','an anthem-style motivational song'],['เพลงพิธี/ซึ้ง','a ceremonial or deeply emotional song']],
+mood:[['สนุกสดใส','joyful'],['โรแมนติก','romantic'],['เศร้า/อกหัก','heartbroken'],['อบอุ่นซึ้ง','warm and touching'],['ให้กำลังใจ','uplifting'],['ฮึกเหิม','triumphant'],['ผ่อนคลาย','relaxed'],['ลึกลับ','mysterious'],['ตื่นเต้น','exciting'],['ยิ่งใหญ่','epic'],['ตลกขำขัน','humorous'],['คิดถึงอดีต','nostalgic'],['สงบสมาธิ','meditative'],['มืดดราม่า','dark and dramatic'],['เหงา','lonely']],
+lang:[['ไทย','Thai'],['อังกฤษ','English'],['ไทย + อังกฤษ','mixed Thai and English'],['ญี่ปุ่น','Japanese'],['เกาหลี','Korean'],['จีนกลาง','Mandarin Chinese'],['สเปน','Spanish'],['ฝรั่งเศส','French'],['อีสาน','Isan (Northeastern Thai dialect)'],['เหนือ (คำเมือง)','Northern Thai dialect (Kham Mueang)'],['ใต้','Southern Thai dialect']],
+pov:[['ไม่ระบุ',''],['ฉัน (บุรุษที่ 1)','first person (I)'],['เธอ/คุณ (บุรุษที่ 2)','second person (you)'],['เขา/เธอ (บุรุษที่ 3)','third person (he or she)']],
+reg:[['ไม่ระบุ',''],['ภาษาพูดสบายๆ','casual conversational wording'],['กวี/เปรียบเปรย','poetic wording with metaphors'],['เรียบง่ายเข้าใจง่าย','simple, easy-to-understand wording'],['ทางการ/สง่า','formal and dignified wording']],
+genre:[['ลูกทุ่ง','Thai luk thung',GT],['หมอลำ/ลำซิ่ง','Isan mor lam and lam sing',GT],['ลูกกรุง','Thai luk krung classic',GT],['เพื่อชีวิต','Thai folk-rock songs for life',GT],['สตริงไทย/T-pop','Thai pop (T-pop)',GT],['อินดี้ไทย','Thai indie',GT],['ดนตรีไทยเดิม','traditional Thai classical music',GT],['ไทยร่วมสมัย (ผสมดนตรีไทย)','contemporary fusion with traditional Thai instruments',GT],
+['ป็อป','pop',GP],['แดนซ์ป็อป','dance-pop',GP],['อินดี้ป็อป','indie pop',GP],['ร็อก','rock',GP],['ป็อปร็อก','pop rock',GP],['พังก์','punk rock',GP],['เมทัล','heavy metal',GP],['โฟล์ก/อะคูสติก','acoustic folk',GP],['บัลลาด','power ballad',GP],
+['อาร์แอนด์บี','R&B',GW],['โซล','soul',GW],['ฮิปฮอป/แร็ป','hip-hop',GW],['แจ๊ส','jazz',GW],['บลูส์','blues',GW],['คันทรี','country',GW],['เรกเก้','reggae',GW],['ฟังก์','funk',GW],['ดิสโก้','disco',GW],['โบซาโนวา/ลาติน','bossa nova and Latin',GW],['กอสเปล','gospel',GW],['แอฟโฟรบีต','afrobeat',GW],
+['EDM','EDM',GE],['เฮาส์','house',GE],['โลไฟ ฮิปฮอป','lo-fi hip-hop',GE],['ซินธ์เวฟ','synthwave',GE],['แอมเบียนต์','ambient',GE],['ฟิวเจอร์เบส','future bass',GE],
+['เค-ป็อป','K-pop',GA],['เจ-ป็อป','J-pop',GA],['ซิตี้ป็อป','city pop',GA],['ซี-ป็อป','Mandopop',GA],
+['คลาสสิก','classical',GO],['ออร์เคสตราสุดยิ่งใหญ่','epic cinematic orchestral',GO],['เพลงประกอบภาพยนตร์','film score',GO],['เปียโนนีโอคลาสสิก','neoclassical piano',GO],['เพลงกล่อมเด็ก/นิทาน','gentle nursery-rhyme style',GO]],
+tempo:[['ไม่ระบุ',''],['ช้ามาก 50-65 BPM','very slow, 50-65 BPM'],['ช้า 66-85 BPM','slow, 66-85 BPM'],['ปานกลาง 86-105 BPM','mid-tempo, 86-105 BPM'],['กึ่งเร็ว 106-125 BPM','upbeat, 106-125 BPM'],['เร็ว 126-145 BPM','fast, 126-145 BPM'],['เร็วมาก 146+ BPM','very fast, 146+ BPM']],
+key:[['ไม่ระบุ',''],['เมเจอร์ (สดใส)','major key, bright'],['ไมเนอร์ (เศร้า)','minor key, melancholic']],
+ts:[['ไม่ระบุ',''],['4/4','4/4 time'],['3/4 (วอลซ์)','3/4 waltz time'],['6/8','6/8 time']],
+dur:[['จิงเกิล 30 วินาที','',30],['1 นาที','',60],['2 นาที','',120],['3 นาที','',180],['4 นาที','',240],['5 นาที','',300]],
+struct:[['ไม่ระบุ',''],['Verse-Chorus','verse-chorus form'],['โครงสร้างเต็ม (มีบริดจ์)','intro, verse, pre-chorus, chorus, verse, pre-chorus, chorus, bridge, final chorus, outro'],['เล่าเรื่องต่อเนื่อง','through-composed storytelling without a repeated chorus'],['AABA','AABA song form'],['จิงเกิลสั้น ฮุคเด่น','short jingle with a memorable hook in the first 10 seconds'],['ลูป/แอมเบียนต์','evolving loop-based ambient structure']],
+dyn:[['ไม่ระบุ',''],['เริ่มเบาแล้วค่อยๆ ใหญ่','start sparse and build to a big finale'],['พลังคงที่','steady energy throughout'],['เบาดังตัดกันชัด','strong dynamic contrast between soft and loud sections']],
+hook:[['ไม่ระบุ',''],['ฮุคจำง่าย ซ้ำชื่อเพลง','a catchy chorus hook that repeats the song title'],['ร้องตามได้ทั้งห้อง','a singalong chorus for a crowd'],['โต้ตอบ (call-and-response)','a call-and-response hook']],
+vtype:[['มีเนื้อร้อง','with lyrics'],['บรรเลงล้วน','instrumental only, no vocals'],['ฮัมมิ่ง/ไร้เนื้อ','wordless vocalise and humming only']],
+vgen:[['ไม่ระบุ',''],['นักร้องชาย','male lead vocal'],['นักร้องหญิง','female lead vocal'],['ดูเอ็ต ชาย-หญิง','male and female duet'],['วงชาย','male group vocals'],['วงหญิง','female group vocals'],['คอรัสผสม','mixed choir'],['เสียงเด็ก','child vocal']],
+vrange:[['ไม่ระบุ',''],['เสียงสูงใส','high, bright voice'],['เสียงกลาง','mid-range voice'],['เสียงทุ้มต่ำ','deep, low voice'],['เสียงแหบเสน่ห์','raspy, characterful voice']],
+vtech:[['ประสานเสียง','vocal harmonies'],['แบ็คอัพ','backing vocals'],['โต้ตอบ call-and-response','call-and-response vocals'],['แอดลิบ','ad-libs'],['ฟอลเซตโต้','falsetto'],['เบลท์พลังเสียง','powerful belting'],['กระซิบนุ่ม','soft breathy vocals'],['แร็ป','rap verse'],['เมโลดิกแร็ป','melodic rap'],['เอื้อนแบบไทย','Thai-style melismatic ornamentation (uean)'],['ร้องลำ','mor lam style singing']],
+instr:[['กีตาร์โปร่ง','acoustic guitar','เครื่องสายและกีตาร์'],['กีตาร์ไฟฟ้า','electric guitar','เครื่องสายและกีตาร์'],['เบส','bass guitar','เครื่องสายและกีตาร์'],['ไวโอลิน','violin','เครื่องสายและกีตาร์'],['เชลโล','cello','เครื่องสายและกีตาร์'],['ยูคูเลเล่','ukulele','เครื่องสายและกีตาร์'],['ฮาร์ป','harp','เครื่องสายและกีตาร์'],['แบนโจ','banjo','เครื่องสายและกีตาร์'],
+['เปียโน','piano','คีย์บอร์ด'],['อิเล็กทริกเปียโน','Rhodes electric piano','คีย์บอร์ด'],['ออร์แกน','organ','คีย์บอร์ด'],['ซินธ์','synthesizer','คีย์บอร์ด'],['แอคคอร์เดียน','accordion','คีย์บอร์ด'],
+['แซ็กโซโฟน','saxophone','เครื่องเป่า'],['ทรัมเป็ต','trumpet','เครื่องเป่า'],['ฟลูต','flute','เครื่องเป่า'],['คลาริเน็ต','clarinet','เครื่องเป่า'],['ฮาร์โมนิกา','harmonica','เครื่องเป่า'],
+['กลองชุด','drum kit','กลองและเพอร์คัชชัน'],['เพอร์คัชชัน','percussion','กลองและเพอร์คัชชัน'],['คาฮอน','cajon','กลองและเพอร์คัชชัน'],['กลองอิเล็กทรอนิกส์','electronic drum machine','กลองและเพอร์คัชชัน'],
+['ระนาดเอก','ranat ek (Thai xylophone)','ดนตรีไทยและพื้นบ้าน'],['ขิม','khim (Thai hammered dulcimer)','ดนตรีไทยและพื้นบ้าน'],['ซออู้/ซอด้วง','Thai fiddles (saw u, saw duang)','ดนตรีไทยและพื้นบ้าน'],['ขลุ่ยไทย','Thai bamboo flute (khlui)','ดนตรีไทยและพื้นบ้าน'],['พิณ','Isan phin lute','ดนตรีไทยและพื้นบ้าน'],['แคน','khaen mouth organ','ดนตรีไทยและพื้นบ้าน'],['โปงลาง','pong lang','ดนตรีไทยและพื้นบ้าน'],['จะเข้','jakhe','ดนตรีไทยและพื้นบ้าน'],['กลองยาว','klong yao','ดนตรีไทยและพื้นบ้าน'],['ฉิ่งฉาบ','ching and chap cymbals','ดนตรีไทยและพื้นบ้าน'],
+['ออร์เคสตราเต็มวง','full orchestra','ออร์เคสตรา'],['เครื่องสายหมู่','string section','ออร์เคสตรา'],['เครื่องทองเหลือง','brass section','ออร์เคสตรา'],['คอรัสประสาน','choir pads','ออร์เคสตรา']],
+solo:[['กีตาร์ไฟฟ้า','electric guitar'],['เปียโน','piano'],['ไวโอลิน','violin'],['แซ็กโซโฟน','saxophone'],['ทรัมเป็ต','trumpet'],['ฟลูต','flute'],['ซินธ์','synth'],['เบส','bass'],['กลอง','drum'],['ระนาดเอก','ranat ek'],['ซออู้/ซอด้วง','Thai fiddle'],['ขลุ่ยไทย','Thai khlui flute'],['พิณ','phin'],['แคน','khaen'],['ฮาร์โมนิกา','harmonica']],
+prod:[['ไลฟ์แบนด์ ซาวด์สด','live band feel'],['โปรดักชันสะอาดคมชัด','polished modern studio production'],['โลไฟ ฟิล์มเกรน','lo-fi tape texture'],['ซินธ์อนาล็อกยุค 80','80s analog synth sound'],['อะคูสติกใกล้ชิด','intimate acoustic recording'],['ออร์เคสตราหนา','lush orchestral arrangement'],['เบสหนัก','heavy sub bass'],['รีเวิร์บกว้าง','wide spacious reverb']]
+};
+const MS={mood:new Set(),genre:new Set(),vtech:new Set(),instr:new Set(),solo:new Set(),prod:new Set()};
+const MU0={purpose:0,vtype:0,vgen:0,vrange:0,lang:0,tempo:0,key:0,ts:0,dur:3,struct:0,dyn:0,hook:0,reg:0,pov:0};
+const MU={...MU0};
+const MXT=['muTopic','muTitle','muMust','muAvoid','muExtra'];
+let muCards=[];
+const act=()=>TAB===3?sbCards:TAB===4?muCards:cards;
+const markC=k=>document.querySelectorAll('[data-c="'+k+'"] button').forEach((b,i)=>b.setAttribute('aria-pressed',MS[k]?MS[k].has(i):MU[k]===i));
+document.querySelectorAll('[data-c]').forEach(el=>{const k=el.dataset.c;let lg='';MX[k].forEach((it,i)=>{if(typeof it[2]==='string'&&it[2]!==lg){lg=it[2];const t=document.createElement('div');t.className='grp';t.textContent=lg;el.appendChild(t)}el.appendChild(btn(it[0],()=>{if(MS[k]){MS[k].has(i)?MS[k].delete(i):MS[k].add(i)}else MU[k]=i;markC(k);muOut()}))});markC(k)});
+MXT.forEach(id=>$(id).oninput=muOut);
+function muBuild(){
+  const g=k=>MX[k][MU[k]],v=id=>$(id).value.trim(),sel=(k,j)=>[...MS[k]].sort((a,b)=>a-b).map(i=>MX[k][i][j]);
+  const dur=MX.dur[MU.dur][2],vocal=MU.vtype===0,vc=MU.vtype===2;
+  const L=(a,b)=>b&&b!=='ไม่ระบุ'?'- '+a+': '+b:false,J=x=>x.filter(y=>y!==false&&y!=null).join('\n');
+  const lines=Math.max(4,Math.round(dur/5.5)),lenE=dur<60?dur+' seconds':dur/60+' minutes',lenT=dur<60?dur+' วินาที':dur/60+' นาที';
+  const topic=v('muTopic'),title=v('muTitle'),ex=v('muExtra');
+  const lead=[g('vgen')[1],g('vrange')[1]].filter(Boolean).join(', '),leadT=[g('vgen')[0],g('vrange')[0]].filter(x=>x!=='ไม่ระบุ').join(', ');
+  const solosE=sel('solo',1).join(', '),solosT=sel('solo',0).join(', ');
+  const en=J(['You are a professional songwriter, composer and music producer. Create a complete song based on the brief below.','',
+  'BRIEF',L('Purpose',g('purpose')[1]),L('Song title',title||'(suggest a title)'),L('Theme or story',topic||'[theme]'),L('Mood',sel('mood',1).join(', ')),vocal&&L('Lyric language',g('lang')[1]),vocal&&L('Point of view',g('pov')[1]),vocal&&L('Lyric style',g('reg')[1]),vocal&&L('Words or phrases that must appear',v('muMust')),L('Avoid',v('muAvoid')),'',
+  'MUSIC',L('Genre',sel('genre',1).join(', ')),L('Tempo',g('tempo')[1]),L('Key and mode',g('key')[1]),L('Time signature',g('ts')[1]),L('Length',lenE),L('Structure',g('struct')[1]),L('Dynamics',g('dyn')[1]),vocal&&L('Hook',g('hook')[1]),'',
+  'VOCALS',L('Vocal type',g('vtype')[1]),vocal&&L('Lead vocal',lead),vocal&&L('Vocal techniques',sel('vtech',1).join(', ')),'',
+  'INSTRUMENTS AND PRODUCTION',L('Instruments',sel('instr',1).join(', ')),L('Solo sections featuring',solosE),L('Production',sel('prod',1).join(', ')),L('Extra sound notes',ex),'',
+  'OUTPUT','- A song title and a style prompt under 200 characters for a music generator such as Suno or Udio (genre, mood, vocals, instruments; no artist names)',
+  vocal?'- Full lyrics with section tags such as [Intro], [Verse 1], [Pre-Chorus], [Chorus], [Bridge], [Outro] and performance cues in parentheses such as (harmony) or (guitar solo)':'- A section-by-section arrangement with approximate timestamps, instrument cues and the point where each solo enters, using tags such as [Intro], [Theme A], [Solo], [Outro]',
+  vocal&&'- About '+lines+' lines of lyrics in total, with a consistent syllable count so every line is singable',
+  vc&&'- Use only wordless vocals (oh, ah, humming), no lyrics',
+  '- A one-line arrangement note for each section']);
+  const tx=J(['คุณคือนักแต่งเพลง นักประพันธ์ และโปรดิวเซอร์เพลงมืออาชีพ ช่วยสร้างเพลงฉบับสมบูรณ์จากบรีฟด้านล่าง','',
+  'บรีฟ',L('วัตถุประสงค์',g('purpose')[0]),L('ชื่อเพลง',title||'(ช่วยเสนอชื่อ)'),L('ธีมหรือเรื่องราว',topic||'[ระบุธีม]'),L('อารมณ์',sel('mood',0).join(', ')),vocal&&L('ภาษาเนื้อเพลง',g('lang')[0]),vocal&&L('มุมมองผู้ร้อง',g('pov')[0]),vocal&&L('ลีลาภาษา',g('reg')[0]),vocal&&L('คำหรือประโยคที่ต้องมี',v('muMust')),L('ห้ามมี',v('muAvoid')),'',
+  'ดนตรี',L('แนวเพลง',sel('genre',0).join(', ')),L('ความเร็ว',g('tempo')[0]),L('คีย์',g('key')[0]),L('จังหวะ',g('ts')[0]),L('ความยาว',lenT),L('โครงสร้าง',g('struct')[0]),L('การไล่อารมณ์',g('dyn')[0]),vocal&&L('ท่อนฮุค',g('hook')[0]),'',
+  'เสียงร้อง',L('รูปแบบ',g('vtype')[0]),vocal&&L('ผู้ร้องนำ',leadT),vocal&&L('เทคนิคการร้อง',sel('vtech',0).join(', ')),'',
+  'เครื่องดนตรีและโปรดักชัน',L('เครื่องดนตรี',sel('instr',0).join(', ')),L('ท่อนโซโล่',solosT),L('ลักษณะเสียง',sel('prod',0).join(', ')),L('รายละเอียดเพิ่มเติม',ex),'',
+  'ผลลัพธ์ที่ต้องการ','- ชื่อเพลง และ style prompt ภาษาอังกฤษไม่เกิน 200 ตัวอักษรสำหรับเครื่องมือสร้างเพลงอย่าง Suno หรือ Udio (แนวเพลง อารมณ์ เสียงร้อง เครื่องดนตรี ห้ามใช้ชื่อศิลปิน)',
+  vocal?'- เนื้อเพลงเต็มพร้อมแท็กท่อน เช่น [Intro], [Verse 1], [Pre-Chorus], [Chorus], [Bridge], [Outro] และคำสั่งการแสดงในวงเล็บ เช่น (harmony) หรือ (guitar solo)':'- แนวทางเรียบเรียงทีละท่อน พร้อมเวลาโดยประมาณ จุดเข้าของเครื่องดนตรี และจุดที่โซโล่เริ่ม โดยใช้แท็กอย่าง [Intro], [Theme A], [Solo], [Outro]',
+  vocal&&'- เนื้อเพลงรวมประมาณ '+lines+' บรรทัด จำนวนพยางค์ต่อบรรทัดสม่ำเสมอ เพื่อให้ร้องได้ลื่น',
+  vc&&'- ใช้เสียงร้องไร้เนื้อเท่านั้น (โอ อา ฮัมมิ่ง) ไม่มีเนื้อเพลง',
+  '- บันทึกการเรียบเรียงหนึ่งบรรทัดสำหรับแต่ละท่อน']);
+  const tags=[...new Set([...sel('genre',1),...sel('mood',1),vocal?'':'instrumental',g('tempo')[1],g('key')[1],g('ts')[1],vocal?lead:'',...(vocal?sel('vtech',1):[]),...sel('instr',1),...sel('solo',1).map(x=>x+' solo'),...sel('prod',1),vocal?g('lang')[1]+' lyrics':''].filter(Boolean))].join(', ');
+  return [['Prompt (English)',en],['Prompt (ภาษาไทย)',tx],['Style tags สำหรับ Suno/Udio ('+tags.length+' ตัวอักษร)',tags||'(เลือกแนวเพลงเพื่อสร้าง style tags)']];
+}
+function muOut(){
+  muCards=muBuild();const box=$('muout');box.innerHTML='';
+  muCards.forEach(([t,x])=>{const c=document.createElement('div');c.className='card';const h=document.createElement('header'),h3=document.createElement('h3'),b=document.createElement('button');h3.textContent=t;b.className='copy';b.type='button';b.textContent='คัดลอก';b.onclick=()=>copy(x,b,'คัดลอก');h.append(h3,b);const p=document.createElement('pre');p.textContent=x;c.append(h,p);box.appendChild(c)});
+}
+let mct;
+$('muclr').onclick=()=>{
+  const b=$('muclr');
+  if(!b.dataset.arm){b.dataset.arm='1';b.textContent='ยืนยันล้าง?';mct=setTimeout(()=>{delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด'},3000);return}
+  clearTimeout(mct);delete b.dataset.arm;b.textContent='เคลียร์ข้อมูลทั้งหมด';
+  Object.assign(MU,MU0);Object.keys(MS).forEach(k=>MS[k].clear());MXT.forEach(id=>$(id).value='');
+  [...Object.keys(MU0),...Object.keys(MS)].forEach(markC);muOut();scrollTo(0,0);
+};
+muOut();setTab(1);
 const TH=document.documentElement,tb=$('theme'),mq=matchMedia('(prefers-color-scheme: dark)');
 const cur=()=>TH.dataset.theme||(mq.matches?'dark':'light');
 const lab=()=>{tb.textContent=cur()==='dark'?'โหมดสว่าง':'โหมดมืด';tb.setAttribute('aria-label','สลับเป็น'+tb.textContent)};
@@ -298,28 +535,24 @@ if(mq.addEventListener)mq.addEventListener('change',lab);
 lab();
 out();
 </script>
+
 <div id="appToast" class="app-toast" role="status" aria-live="polite" hidden></div>
 <script>
-// PWA: installation support for Chromium, iOS Safari and other browsers.
+// PWA install support: Chromium prompt, iOS Safari instructions and offline shell.
 (() => {
   const installButton = document.getElementById('install');
   const toast = document.getElementById('appToast');
   let deferredInstallPrompt = null;
-  let toastTimer = null;
-
+  let toastTimer;
   const showToast = (message) => {
     if (!toast) return;
     toast.textContent = message;
     toast.hidden = false;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { toast.hidden = true; }, 4800);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 4200);
   };
-
-  const isStandalone = () =>
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.matchMedia('(display-mode: fullscreen)').matches ||
-    window.navigator.standalone === true;
-
+  const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone === true;
   const setInstalledState = () => {
     if (!installButton) return;
     if (isStandalone()) {
@@ -328,19 +561,15 @@ out();
       installButton.setAttribute('aria-label', 'ติดตั้งแอปแล้ว');
     }
   };
-
   window.addEventListener('beforeinstallprompt', (event) => {
-    // Keep the native prompt until the user presses the install button.
     event.preventDefault();
     deferredInstallPrompt = event;
   });
-
   window.addEventListener('appinstalled', () => {
     deferredInstallPrompt = null;
     setInstalledState();
     showToast('ติดตั้ง Prompt Builder เรียบร้อยแล้ว');
   });
-
   installButton?.addEventListener('click', async () => {
     if (isStandalone()) {
       showToast('คุณกำลังใช้งาน Prompt Builder ในรูปแบบแอปอยู่แล้ว');
@@ -351,24 +580,13 @@ out();
       deferredInstallPrompt.prompt();
       const choice = await deferredInstallPrompt.userChoice;
       deferredInstallPrompt = null;
-      if (choice?.outcome === 'accepted') {
-        showToast('รับคำสั่งติดตั้งแล้ว ทำตามขั้นตอนบนหน้าจอได้เลย');
-      } else {
-        showToast('ยกเลิกการติดตั้งแล้ว สามารถติดตั้งภายหลังได้');
-      }
+      showToast(choice?.outcome === 'accepted' ? 'รับคำสั่งติดตั้งแล้ว ทำตามขั้นตอนบนหน้าจอได้เลย' : 'ยกเลิกการติดตั้งแล้ว สามารถติดตั้งภายหลังได้');
       return;
     }
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-    if (isIOS) {
-      showToast('บน iPhone/iPad: แตะปุ่มแชร์ใน Safari แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”');
-    } else {
-      showToast('เปิดเมนูของเบราว์เซอร์ แล้วเลือก “ติดตั้งแอป” หรือ “สร้างทางลัด”');
-    }
+    showToast(isIOS ? 'บน iPhone/iPad: แตะปุ่มแชร์ใน Safari แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”' : 'เปิดเมนูของเบราว์เซอร์ แล้วเลือก “ติดตั้งแอป” หรือ “สร้างทางลัด”');
   });
-
   setInstalledState();
-
-  // Service workers require HTTPS, except on localhost during development.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' })
@@ -376,10 +594,10 @@ out();
         .catch((error) => console.warn('PWA service worker registration failed:', error));
     });
   }
-
   window.addEventListener('offline', () => showToast('ขณะนี้ออฟไลน์: ใช้งานแอปที่เคยเปิดแล้วได้ตามปกติ'));
   window.addEventListener('online', () => showToast('กลับมาเชื่อมต่ออินเทอร์เน็ตแล้ว'));
 })();
 </script>
+
 </body>
 </html>
